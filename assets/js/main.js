@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     var hitokotoText = hitokotoData.text;
                     var hitokotoBy = hitokotoData.by;
                     var hitokotoFrom = hitokotoData.from;
-                    var hitokotoUri = hitokotoData.uri;
+                    var hitokotoUrl = hitokotoData.url;
                     var hitokotoTime = hitokotoData.time;
 
                     document.getElementById('description').innerHTML =
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // 点击文本复制一言
                     document.getElementById('hitokoto-text').addEventListener('click', function () {
-                        var textToCopy = hitokotoText + '\n- ' + hitokotoBy + ' 「' + hitokotoFrom + '」 ' + hitokotoTime + ' Uri: ' + hitokotoUri;
+                        var textToCopy = hitokotoText + '\n- ' + hitokotoBy + ' 「' + hitokotoFrom + '」 ' + hitokotoTime + ' Url: ' + hitokotoUrl;
                         navigator.clipboard.writeText(textToCopy).then(function() {
                             alert('一言已复制到剪贴板！');
                         }, function(err) {
@@ -90,15 +90,15 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     // 点击作者跳转链接
                     document.getElementById('hitokoto-by').addEventListener('click', function () {
-                        if (hitokotoUri) {
-                            window.open(hitokotoUri, '_blank');
+                        if (hitokotoUrl) {
+                            window.open(hitokotoUrl, '_blank');
                         }
                     });
 
                     // 点击出处跳转链接
                     document.getElementById('hitokoto-from').addEventListener('click', function () {
-                        if (hitokotoUri) {
-                            window.open(hitokotoUri, '_blank');
+                        if (hitokotoUrl) {
+                            window.open(hitokotoUrl, '_blank');
                         }
                     });
                 } else {
@@ -113,7 +113,7 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById('description').innerHTML = "加载一言失败。";
         }
     };
-    xhr.open("GET", "/assets/hitokoto.json", true); // 替换JSON 文件路径
+    xhr.open("GET", "/assets/hitokoto.json", true); // 替换为你的 JSON 文件路径
     xhr.send();
 
     var iUpElements = document.querySelectorAll(".iUp");

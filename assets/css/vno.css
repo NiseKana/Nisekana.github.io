@@ -8377,7 +8377,6 @@ i {
 @media screen and (max-width:960px) {
     .power {
         /*display: none*/
-         transform: translateX(-50%); /* 修正居中位置 */
     }
 }
 
