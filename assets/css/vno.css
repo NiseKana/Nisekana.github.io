@@ -7926,7 +7926,7 @@ hr {
     width: 100%;
     max-width: none;
     height: 100%;
-    background: center center  url("https://api.xn--kiv.fun/AcgnPic") #666;
+    background: center center  url("https://t.alcy.cc/fj") #666;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
@@ -8375,8 +8375,9 @@ i {
 }
 
 @media screen and (max-width:960px) {
-    .remark {
-        display: none
+    .power {
+        /*display: none*/
+         transform: translateX(-50%); /* 修正居中位置 */
     }
 }
 

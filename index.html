@@ -87,21 +87,23 @@
         <div class="remark iUp">
             <p class="power">
                 访问次数：<span id="vercount_value_site_pv">···</span> , 
-                访问人数：<span id="vercount_value_site_uv">···</span>
-                </br>Powered ©  
+                访问人数：<span id="vercount_value_site_uv">···</span></br>
+                Copyright © <span id="currentYear"></span> 
                 <a href="https://github.com/nisekana/" target="_blank"> Nisekana </a>
             </p>
         </div>
     </header>
     <script defer src="https://cn.vercount.one/js"></script>
-    <script type="text/javascript" src="https://unpkg.com/dmego-home-page@latest/assets/js/jquery.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/dmego-home-page@latest/assets/js/main.js"></script>
+    <script type="text/javascript" src="/assets/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/assets/js/main.js"></script>
 </html>
 
 <script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-4L0GELWRT2');
+    document.addEventListener('DOMContentLoaded', function() {
+    const yearSpan = document.getElementById('currentYear');
+    if (yearSpan) {
+        const currentYear = new Date().getFullYear();
+        yearSpan.textContent = currentYear;
+    }
+    });
 </script>
