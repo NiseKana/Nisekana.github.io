@@ -9,590 +9,73 @@
     <title>Nisekana</title>
     <link rel="apple-touch-icon" href="/apple-touch-icon.png">
     <link rel="icon" href="/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
-    <style>
-        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg-gradient: linear-gradient(160deg, #0a0a0f 0%, #141428 40%, #1a1a3e 70%, #0f1525 100%);
-            --card-bg: rgba(255, 255, 255, 0.04);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --card-hover: rgba(255, 255, 255, 0.08);
-            --text-primary: #f0f0f5;
-            --text-secondary: rgba(255, 255, 255, 0.5);
-            --text-muted: rgba(255, 255, 255, 0.28);
-            --accent: #818cf8;
-            --accent-rgb: 129, 140, 248;
-            --accent-dim: rgba(129, 140, 248, 0.12);
-            --divider: rgba(255, 255, 255, 0.06);
-            --shadow: 0 1px 3px rgba(0,0,0,0.3), 0 8px 40px rgba(0,0,0,0.25);
-            --blur: blur(24px);
-            --nav-bg: rgba(255, 255, 255, 0.04);
-            --nav-border: rgba(255, 255, 255, 0.06);
-            --glow-color: rgba(129, 140, 248, 0.15);
-            --glow-color-strong: rgba(129, 140, 248, 0.25);
-        }
-
-        [data-theme="light"] {
-            --bg-gradient: linear-gradient(160deg, #f8f8fc 0%, #ececf0 40%, #e4e4ec 70%, #f0f0f6 100%);
-            --card-bg: rgba(255, 255, 255, 0.55);
-            --card-border: rgba(255, 255, 255, 0.7);
-            --card-hover: rgba(255, 255, 255, 0.7);
-            --text-primary: #1a1a2e;
-            --text-secondary: rgba(0, 0, 0, 0.45);
-            --text-muted: rgba(0, 0, 0, 0.25);
-            --accent: #6366f1;
-            --accent-rgb: 99, 102, 241;
-            --accent-dim: rgba(99, 102, 241, 0.08);
-            --divider: rgba(0, 0, 0, 0.05);
-            --shadow: 0 1px 3px rgba(0,0,0,0.04), 0 8px 40px rgba(0,0,0,0.06);
-            --blur: blur(24px);
-            --nav-bg: rgba(0, 0, 0, 0.03);
-            --nav-border: rgba(0, 0, 0, 0.05);
-            --glow-color: rgba(99, 102, 241, 0.1);
-            --glow-color-strong: rgba(99, 102, 241, 0.18);
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue",
-                         "PingFang SC", "Noto Sans CJK SC", "Microsoft YaHei", sans-serif;
-            background: var(--bg-gradient);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 48px 24px;
-            transition: background 0.5s ease, color 0.3s ease;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            /*cursor: none;*/
-        }
-
-        /* ===== Cursor Glow ===== */
-        .cursor-glow {
-            position: fixed;
-            width: 320px;
-            height: 320px;
-            border-radius: 50%;
-            background: radial-gradient(circle, var(--glow-color) 0%, transparent 70%);
-            pointer-events: none;
-            z-index: 0;
-            transform: translate(-50%, -50%);
-            transition: opacity 0.3s ease;
-            opacity: 0;
-        }
-        .cursor-glow.active { opacity: 1; }
-
-        /* Mobile: hide cursor glow, restore normal cursor */
-        @media (hover: none), (max-width: 768px) {
-            body { cursor: auto; }
-            .cursor-glow { display: none; }
-        }
-
-        /* ===== Layout ===== */
-        .container {
-            width: 100%;
-            max-width: 580px;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ===== Profile Card ===== */
-        .profile {
-            background: var(--card-bg);
-            backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur);
-            border: 1px solid var(--card-border);
-            border-radius: 24px;
-            padding: 48px 40px 36px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            position: relative;
-            animation: fadeUp 0.5s ease both;
-            transition: box-shadow 0.4s ease, border-color 0.4s ease;
-            overflow: hidden;
-        }
-        .profile::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 24px;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .profile.glow-active {
-            border-color: rgba(var(--accent-rgb), 0.2);
-            box-shadow: var(--shadow), 0 0 60px var(--glow-color);
-        }
-        .profile.glow-active::before {
-            opacity: 1;
-            background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), var(--glow-color) 0%, transparent 60%);
-        }
-        .profile > * { position: relative; z-index: 1; }
-
-        .theme-toggle {
-            position: absolute;
-            top: 18px;
-            right: 18px;
-            width: 38px;
-            height: 38px;
-            border: none;
-            border-radius: 50%;
-            background: var(--nav-bg);
-            border: 1px solid var(--nav-border);
-            color: var(--text-secondary);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.25s ease;
-            z-index: 2;
-        }
-        .theme-toggle:hover { background: var(--card-hover); color: var(--text-primary); }
-
-        .avatar {
-            width: 110px;
-            height: 110px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin: 0 auto 24px;
-            border: 3px solid var(--divider);
-            transition: transform 0.4s cubic-bezier(.22,.68,0,1.2);
-        }
-        .avatar:hover { transform: scale(1.06); }
-        .avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
-
-        .name {
-            font-size: 1.75rem;
-            font-weight: 700;
-            letter-spacing: -0.01em;
-            margin-bottom: 8px;
-        }
-        .name a { color: var(--text-primary); text-decoration: none; }
-
-        .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-secondary);
-            margin-bottom: 28px;
-            font-weight: 400;
-        }
-
-        .divider {
-            width: 36px;
-            height: 2px;
-            background: var(--accent);
-            border-radius: 1px;
-            margin: 0 auto 24px;
-            opacity: 0.5;
-        }
-
-        .hitokoto {
-            font-size: 0.88rem;
-            color: var(--text-secondary);
-            line-height: 1.8;
-            cursor: pointer;
-            padding: 0 4px;
-            transition: color 0.2s ease;
-            min-height: 28px;
-        }
-        .hitokoto:hover { color: var(--text-primary); }
-        .hitokoto-author {
-            font-weight: 600;
-            color: var(--accent);
-            cursor: pointer;
-        }
-
-        /* ===== Section ===== */
-        .section {
-            margin-top: 20px;
-            animation: fadeUp 0.5s 0.1s ease both;
-        }
-
-        .section-label {
-            font-size: 0.72rem;
-            font-weight: 600;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            margin-bottom: 12px;
-            padding-left: 4px;
-        }
-
-        .nav-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-        }
-
-        /* ===== Nav Card with Glow ===== */
-        .nav-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 22px 12px;
-            border-radius: 16px;
-            background: var(--card-bg);
-            backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur);
-            border: 1px solid var(--card-border);
-            text-decoration: none;
-            color: var(--text-primary);
-            box-shadow: var(--shadow);
-            transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .nav-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 16px;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            pointer-events: none;
-            background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), var(--glow-color-strong) 0%, transparent 65%);
-        }
-        .nav-card.glow-active {
-            border-color: rgba(var(--accent-rgb), 0.2);
-            box-shadow: var(--shadow), 0 0 40px var(--glow-color);
-        }
-        .nav-card.glow-active::before { opacity: 1; }
-        .nav-card > * { position: relative; z-index: 1; }
-
-        .nav-card svg {
-            width: 24px;
-            height: 24px;
-            stroke: var(--accent);
-            stroke-width: 1.8;
-            fill: none;
-            flex-shrink: 0;
-        }
-        .nav-card span {
-            font-size: 0.82rem;
-            font-weight: 500;
-        }
-
-        /* ===== Social Section ===== */
-        .social-section {
-            margin-top: 20px;
-            animation: fadeUp 0.5s 0.2s ease both;
-        }
-
-        .social-row {
-            display: flex;
-            gap: 10px;
-        }
-
-        .social-card {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 14px 16px;
-            border-radius: 14px;
-            background: var(--card-bg);
-            backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur);
-            border: 1px solid var(--card-border);
-            text-decoration: none;
-            color: var(--text-secondary);
-            font-size: 0.82rem;
-            font-weight: 500;
-            box-shadow: var(--shadow);
-            transition: background 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, color 0.35s ease;
-            position: relative;
-            overflow: hidden;
-        }
-        .social-card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: 14px;
-            opacity: 0;
-            transition: opacity 0.35s ease;
-            pointer-events: none;
-            background: radial-gradient(circle at var(--glow-x, 50%) var(--glow-y, 50%), var(--glow-color-strong) 0%, transparent 65%);
-        }
-        .social-card.glow-active {
-            border-color: rgba(var(--accent-rgb), 0.2);
-            box-shadow: var(--shadow), 0 0 30px var(--glow-color);
-            color: var(--text-primary);
-        }
-        .social-card.glow-active::before { opacity: 1; }
-        .social-card > * { position: relative; z-index: 1; }
-
-        .social-card svg {
-            width: 17px;
-            height: 17px;
-            fill: currentColor;
-            flex-shrink: 0;
-        }
-
-        /* ===== Footer ===== */
-        .footer {
-            margin-top: 24px;
-            text-align: center;
-            font-size: 0.72rem;
-            color: var(--text-muted);
-            line-height: 2;
-            animation: fadeUp 0.5s 0.3s ease both;
-        }
-        .footer a { color: var(--text-secondary); text-decoration: none; transition: color 0.2s; }
-        .footer a:hover { color: var(--accent); }
-
-        /* ===== Toast ===== */
-        .toast {
-            position: fixed;
-            bottom: 32px;
-            left: 50%;
-            transform: translateX(-50%) translateY(16px);
-            background: var(--card-bg);
-            backdrop-filter: var(--blur);
-            -webkit-backdrop-filter: var(--blur);
-            border: 1px solid var(--card-border);
-            color: var(--text-primary);
-            padding: 10px 22px;
-            border-radius: 12px;
-            font-size: 0.82rem;
-            opacity: 0;
-            pointer-events: none;
-            transition: all 0.3s ease;
-            z-index: 999;
-        }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-        /* ===== Responsive ===== */
-        @media (max-width: 375px) {
-            body { padding: 16px 10px; cursor: auto; }
-            .profile { padding: 32px 18px 24px; border-radius: 18px; }
-            .avatar { width: 76px; height: 76px; margin-bottom: 18px; }
-            .name { font-size: 1.25rem; }
-            .subtitle { font-size: 0.8rem; margin-bottom: 20px; }
-            .hitokoto { font-size: 0.78rem; }
-            .nav-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
-            .nav-card { padding: 16px 6px; gap: 7px; border-radius: 12px; }
-            .nav-card svg { width: 20px; height: 20px; }
-            .nav-card span { font-size: 0.72rem; }
-            .social-row { gap: 8px; }
-            .social-card { padding: 11px 8px; font-size: 0.76rem; gap: 7px; border-radius: 12px; }
-            .social-card svg { width: 15px; height: 15px; }
-            .section { margin-top: 16px; }
-            .social-section { margin-top: 16px; }
-            .footer { margin-top: 18px; font-size: 0.68rem; }
-        }
-
-        @media (min-width: 376px) and (max-width: 480px) {
-            body { padding: 20px 14px; cursor: auto; }
-            .profile { padding: 36px 24px 28px; border-radius: 20px; }
-            .avatar { width: 90px; height: 90px; margin-bottom: 20px; }
-            .name { font-size: 1.4rem; }
-            .subtitle { font-size: 0.84rem; margin-bottom: 24px; }
-            .hitokoto { font-size: 0.82rem; }
-            .nav-grid { gap: 8px; }
-            .nav-card { padding: 18px 8px; gap: 8px; }
-            .nav-card svg { width: 22px; height: 22px; }
-            .nav-card span { font-size: 0.76rem; }
-            .social-card { padding: 12px 10px; font-size: 0.78rem; }
-        }
-
-        @media (min-width: 481px) and (max-width: 768px) {
-            body { padding: 36px 24px; cursor: auto; }
-            .container { max-width: 520px; }
-            .profile { padding: 44px 36px 32px; }
-            .avatar { width: 100px; height: 100px; }
-            .name { font-size: 1.6rem; }
-        }
-
-        @media (min-width: 769px) and (max-width: 1024px) {
-            body { padding: 48px 32px; }
-            .container { max-width: 560px; }
-            .profile { padding: 48px 44px 36px; }
-            .avatar { width: 110px; height: 110px; }
-        }
-
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/index.css">
 </head>
 <body>
 
-    <!-- Cursor glow element -->
-    <div class="cursor-glow" id="cursorGlow"></div>
+    <div class="particles">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span>
+    </div>
 
-    <div class="container">
-        <div class="profile glow-target" id="profileCard">
-            <button class="theme-toggle" id="themeToggle" title="切换主题">
-                <svg id="themeIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-                </svg>
-            </button>
+    <button class="theme-toggle" id="themeToggle" title="切换主题">
+        <i class="fa-solid fa-sun" id="themeIcon"></i>
+    </button>
 
-            <div class="avatar">
-                <img src="/assets/img/nisekana.jpg" alt="Nisekana">
-            </div>
-
-            <h1 class="name"><a href="/">Nisekana</a></h1>
-            <p class="subtitle">歌声は言葉とは関係ないからね</p>
-            <div class="divider"></div>
-            <div class="hitokoto" id="hitokoto">加载中…</div>
-        </div>
-
-        <!-- 导航 -->
-        <div class="section">
-            <div class="section-label">导航</div>
-            <div class="nav-grid">
-                <a href="https://blog.122439.xyz" class="nav-card glow-target" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                    <span>博客</span>
-                </a>
-                <a href="https://alist.122439.xyz" class="nav-card glow-target" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
-                    <span>网盘</span>
-                </a>
-                <a href="https://122439.xyz/music" class="nav-card glow-target" target="_blank" rel="noopener">
-                    <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
-                    <span>音乐</span>
-                </a>
-            </div>
-        </div>
-
-        <!-- 社交 -->
-        <div class="social-section">
-            <div class="section-label">社交</div>
-            <div class="social-row">
-                <a href="https://github.com/nisekana/" class="social-card glow-target" target="_blank" rel="noopener" title="GitHub">
-                    <svg viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
-                    <span>GitHub</span>
-                </a>
-                <a href="javascript:decryptEmail('bmlzZWthbmFAcXEuY29t');" class="social-card glow-target" title="Email">
-                    <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-                    <span>Email</span>
-                </a>
+    <div class="main">
+        <div class="container">
+            <div class="profile">
+                <div class="avatar-wrap">
+                    <div class="avatar">
+                        <img src="/assets/img/nisekana.webp" alt="Nisekana">
+                    </div>
+                </div>
+                <h1 class="name"><a href="/">Nisekana</a></h1>
+                <p class="subtitle">歌は、言語関係ないですからね</p>
+                <div class="divider"></div>
+                <div class="hitokoto" id="hitokoto">加载中…</div>
+                <div class="social-row">
+                    <a href="https://github.com/nisekana/" class="social-btn" target="_blank" rel="noopener" title="GitHub">
+                        <i class="fa-brands fa-github"></i>
+                    </a>
+                    <a href="javascript:decryptEmail('bmlzZWthbmFAcXEuY29t');" class="social-btn" title="Email">
+                        <i class="fa-solid fa-envelope"></i>
+                    </a>
+                </div>
+                <div class="nav-footer">
+                    <div class="nav-row">
+                        <a href="https://blog.122439.xyz" class="nav-item" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-pen-nib"></i>
+                            <span>博客</span>
+                        </a>
+                        <a href="https://alist.122439.xyz" class="nav-item" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-cloud"></i>
+                            <span>网盘</span>
+                        </a>
+                        <a href="https://122439.xyz/music" class="nav-item" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-headphones"></i>
+                            <span>音乐</span>
+                        </a>
+                        <a href="https://nav.122439.xyz" class="nav-item" target="_blank" rel="noopener">
+                            <i class="fa-solid fa-compass"></i>
+                            <span>标签页</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </div>
+    </div>
 
-        <div class="footer">
-            访问 <span id="vercount_value_site_pv">···</span> ·
-            访客 <span id="vercount_value_site_uv">···</span>
-            <br>© <span id="currentYear"></span> <a href="https://github.com/nisekana/" target="_blank" rel="noopener">Nisekana</a>
-        </div>
+    <div class="footer">
+        访问 <span id="vercount_value_site_pv">···</span> ·
+        访客 <span id="vercount_value_site_uv">···</span>
+        <br>© <span id="currentYear"></span> <a href="https://github.com/nisekana/" target="_blank" rel="noopener">Nisekana</a>
     </div>
 
     <div class="toast" id="toast"></div>
 
     <script defer src="https://cn.vercount.one/js"></script>
-    <script>
-    (function() {
-        // ===== Theme =====
-        var html = document.documentElement;
-        var toggle = document.getElementById('themeToggle');
-        var icon = document.getElementById('themeIcon');
-        var sun = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
-        var moon = '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>';
-
-        function setTheme(t) {
-            html.setAttribute('data-theme', t);
-            icon.innerHTML = t === 'dark' ? sun : moon;
-            localStorage.setItem('theme', t);
-        }
-        var saved = localStorage.getItem('theme');
-        setTheme(saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'));
-        toggle.addEventListener('click', function() {
-            setTheme(html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
-        });
-
-        // ===== Cursor Glow + Card Illumination =====
-        var glow = document.getElementById('cursorGlow');
-        var targets = document.querySelectorAll('.glow-target');
-        var mouseX = 0, mouseY = 0, glowX = 0, glowY = 0;
-        var rafId = null;
-
-        // Smooth follow with lerp
-        function animateGlow() {
-            glowX += (mouseX - glowX) * 0.12;
-            glowY += (mouseY - glowY) * 0.12;
-            glow.style.left = glowX + 'px';
-            glow.style.top = glowY + 'px';
-            rafId = requestAnimationFrame(animateGlow);
-        }
-
-        // Check if device has hover (desktop)
-        if (window.matchMedia('(hover: hover)').matches) {
-            document.addEventListener('mousemove', function(e) {
-                mouseX = e.clientX;
-                mouseY = e.clientY;
-                glow.classList.add('active');
-                if (!rafId) animateGlow();
-
-                // Update each glow-target
-                targets.forEach(function(card) {
-                    var rect = card.getBoundingClientRect();
-                    var relX = ((e.clientX - rect.left) / rect.width) * 100;
-                    var relY = ((e.clientY - rect.top) / rect.height) * 100;
-                    var isInside = e.clientX >= rect.left && e.clientX <= rect.right &&
-                                   e.clientY >= rect.top && e.clientY <= rect.bottom;
-
-                    if (isInside) {
-                        card.classList.add('glow-active');
-                        card.style.setProperty('--glow-x', relX + '%');
-                        card.style.setProperty('--glow-y', relY + '%');
-                    } else {
-                        card.classList.remove('glow-active');
-                    }
-                });
-            });
-
-            document.addEventListener('mouseleave', function() {
-                glow.classList.remove('active');
-                targets.forEach(function(card) { card.classList.remove('glow-active'); });
-            });
-        }
-
-        // ===== Year =====
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // ===== Hitokoto =====
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (this.readyState === 4 && this.status === 200) {
-                try {
-                    var data = JSON.parse(this.responseText);
-                    if (data && data.length) {
-                        var item = data[Math.floor(Math.random() * data.length)];
-                        var el = document.getElementById('hitokoto');
-                        el.innerHTML = item.text + '<br><span class="hitokoto-author">—— ' + item.by + '</span>' + (item.from ? '「' + item.from + '」' : '');
-                        el.addEventListener('click', function() {
-                            navigator.clipboard.writeText(item.text + '\n- ' + item.by + (item.from ? ' 「' + item.from + '」' : '')).then(function() {
-                                var t = document.getElementById('toast'); t.textContent = '已复制'; t.classList.add('show');
-                                setTimeout(function() { t.classList.remove('show'); }, 1500);
-                            });
-                        });
-                    }
-                } catch(e) { document.getElementById('hitokoto').textContent = '—'; }
-            }
-        };
-        xhr.open('GET', '/assets/hitokoto.json', true);
-        xhr.send();
-
-        // ===== Toast =====
-        function showToast(msg) {
-            var t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(function() { t.classList.remove('show'); }, 1800);
-        }
-
-        // ===== Email =====
-        window.decryptEmail = function(e) { window.location.href = 'mailto:' + atob(e); };
-    })();
-    </script>
+    <script src="/assets/js/index.js"></script>
 </body>
 </html>
